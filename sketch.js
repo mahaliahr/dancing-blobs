@@ -80,32 +80,64 @@ function drawShapes(palette) {
   const x = mouseX;
   const y = mouseY;
 
-  const color = random(palette);
-  fill(color);
-  noStroke();
+  // const range = "bass";
+  // const scale = map(analyser.getEnergy(range), -100, -30, 0, 1, true);
 
-  const range = "bass";
-  const scale = map(analyser.getEnergy(range), -100, -30, 0, 1, true);
+  const bass = analyser.getEnergy(20, 100);
+  const basslevel = map(bass, -100, -30, 0, 100, true);
 
   const highend = analyser.getEnergy(9000, 10000);
   const highendlevel = map(highend, -100, -30, 0, 100, true);
 
-  circle(width / 2, height / 2, highendlevel);
+  const mid = analyser.getEnergy(400, 2600);
+  const midlevel = map(mid, -100, -30, 0, 100, true);
+  //circle(width / 4, height / 4, midscale);
 
-  //ADD LOWMID?
-  // const range = 'bass';
-  // const scale = map(analyser.getEnergy(range), -100, -30, 0, 1, true);
-
-  const diameter = dim * 0.5 * scale;
+  bassRandomize(basslevel);
+  randomize(highendlevel);
+  randomize(midlevel);
+  //
 
   // Generates a random CIRCLE or RECTANGLE
-  const shape = random(shapes);
-  if (shape === "circle") {
-    circle(x, y, diameter);
-  } else if (shape === "rect") {
-    rectMode(CENTER);
-    rect(x, y, diameter, diameter);
+  function bassRandomize(level) {
+    const color = random(palette);
+    const diameter = dim * 0.01 * level;
+    fill(color);
+    noStroke();
+    const shape = random(shapes);
+    if (shape === "circle") {
+      circle(x, y, diameter);
+    } else if (shape === "rect") {
+      rectMode(CENTER);
+      rect(x, y, diameter, diameter);
+    }
   }
+  function randomize(level) {
+    const color = random(palette);
+    fill(color);
+    noStroke();
+    const shape = random(shapes);
+    if (shape === "circle") {
+      circle(random(width / 2), random(height / 2), level);
+    } else if (shape === "rect") {
+      rectMode(CENTER);
+      rect(random(width / 2), random(height / 2), level, level);
+    }
+  }
+  
+  //shapes with outline
+  
+  // function randomize(level) {
+  //   const color = random(palette);
+  //   fill(color);
+  //   const shape = random(shapes);
+  //   if (shape === "circle") {
+  //     circle(random(width / 2), random(height / 2), level);
+  //   } else if (shape === "rect") {
+  //     rectMode(CENTER);
+  //     rect(random(width / 2), random(height / 2), level, level);
+  //   }
+  // }
 }
 
 function mousePressed() {
@@ -118,6 +150,7 @@ function mousePressed() {
     player.mute = false;
     showing = true;
   }
+  
 }
 
 function mouseReleased() {
@@ -139,10 +172,10 @@ function mouseReleased() {
 //   endShape(CLOSE);
 // }
 
-// Draw a line segment centred at the given point
-function segment(x, y, length, angle = 0) {
-  const r = length / 2;
-  const u = Math.cos(angle);
-  const v = Math.sin(angle);
-  line(x - u * r, y - v * r, x + u * r, y + v * r);
-}
+// // Draw a line segment centred at the given point
+// function segment(x, y, length, angle = 0) {
+//   const r = length / 2;
+//   const u = Math.cos(angle);
+//   const v = Math.sin(angle);
+//   line(x - u * r, y - v * r, x + u * r, y + v * r);
+// }
